@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://q7oxsk8lfglb" path="res://scripts/map.gd" id="1_uwrxv"]
 [ext_resource type="TileSet" uid="uid://d4awnes6y6hjs" path="res://assets/tiles.tres" id="2_tiles"]
 [ext_resource type="Script" uid="uid://bn5irdyh830sa" path="res://scenes/frog/frog.gd" id="3_lbhrr"]
-[ext_resource type="SpriteFrames" uid="uid://qn47pacft6oc" path="res://assets/frog_sprites.tres" id="3_lnu2h"]
 [ext_resource type="Script" uid="uid://b24q8jt3bfgef" path="res://scenes/frog/local_input.gd" id="4_linput"]
+[ext_resource type="Script" uid="uid://16rr2fowfwxe" path="res://scenes/frog/rig/frog_rig.gd" id="5_rig"]
 
 [node name="Game" type="Node2D" unique_id=787533974]
 
@@ -25,8 +25,10 @@ script = ExtResource("3_lbhrr")
 map = NodePath("../TileMapLayer")
 jump_highlight = NodePath("../JumpHighlight")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="World/Frog" unique_id=2027099068]
-sprite_frames = ExtResource("3_lnu2h")
+[node name="Rig" type="Node2D" parent="World/Frog" unique_id=2027099068]
+scale = Vector2(0.21333334, 0.21333334)
+script = ExtResource("5_rig")
+animation = 3
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World/Frog" unique_id=629978478]
 polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
