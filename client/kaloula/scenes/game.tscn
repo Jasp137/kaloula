@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bluji3k4u1kb0" path="res://scenes/frog/frog.tscn" id="3_lbhrr"]
 [ext_resource type="Script" uid="uid://b24q8jt3bfgef" path="res://scenes/frog/local_input.gd" id="4_linput"]
 [ext_resource type="Script" uid="uid://b2ie2t8efmnwv" path="res://scripts/game.gd" id="5_game"]
-[ext_resource type="PackedScene" path="res://scenes/paint_pool/paint_pool.tscn" id="6_pool"]
+[ext_resource type="PackedScene" uid="uid://b4gfjuv5yry5c" path="res://scenes/paint_pool/paint_pool.tscn" id="6_pool"]
 [ext_resource type="Script" uid="uid://gkm22lit6pwp" path="res://scripts/logic/game_logic.gd" id="7_logic"]
 [ext_resource type="Script" uid="uid://i8mmchgs3g8x" path="res://scripts/logic/score.gd" id="8_gee14"]
 
@@ -24,11 +24,13 @@ script = ExtResource("1_uwrxv")
 [node name="Frog" parent="World" unique_id=264248472 node_paths=PackedStringArray("map") instance=ExtResource("3_lbhrr")]
 position = Vector2(-16, 16)
 map = NodePath("../TileMapLayer")
+jump_duration = 0.5
 
 [node name="Frog2" parent="World" unique_id=673154137 node_paths=PackedStringArray("map") instance=ExtResource("3_lbhrr")]
 position = Vector2(272, 48)
 color = Color(0.38051757, 0.6086238, 0.19310415, 1)
 map = NodePath("../TileMapLayer")
+jump_duration = 0.5
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2080512935]
 position = Vector2(120, 64)

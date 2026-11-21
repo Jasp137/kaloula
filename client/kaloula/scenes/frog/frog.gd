@@ -7,10 +7,10 @@ class_name Frog
 		color = value
 		if is_node_ready():
 			_apply_color()
-@export var rotation_speed: float = 1;
+@export var rotation_speed: float = 6.0;
 @export var map: Map;
-@export var jump_cooldown: float = 0.5;
-@export var jump_duration: float = 1;
+@export var jump_cooldown: float = 0.1;
+@export var jump_duration: float = 0.2;
 
 @onready var rig: FrogRig = $Rig;
 @onready var jump_highlight: Polygon2D = $JumpHighlight

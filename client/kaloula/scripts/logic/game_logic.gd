@@ -4,7 +4,7 @@ extends Node
 
 @export var map: Map
 @export var frogs: Dictionary[int, Frog] = {}
-@export var paint_budget: int = 3
+@export var paint_budget: int = 10000
 ## Each player's paint pool cell; the pool takes that frog's starting colour.
 @export var pool_cells: Dictionary[int, Vector2i] = {}
 @export var pool_scene: PackedScene
