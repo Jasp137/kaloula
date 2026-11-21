@@ -6,10 +6,10 @@ class_name Frog
 @export var player_id: String = "Player 1"
 @export var rotation_speed: float = 1;
 @export var map: Map;
-@export var jump_highlight: Node2D
 @export var jump_cooldown: float = 0.5;
 
 @onready var rig: FrogRig = $Rig;
+@onready var jump_highlight: Polygon2D = $JumpHighlight
 
 var time_since_last_jump = 0;
 
@@ -21,7 +21,6 @@ enum Direction {
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	assert(map != null, "Frog needs its map export set")
-	assert(jump_highlight != null, "Frog needs its jump_highlight export set")
 	rig.palette = FrogPalette.from_color(color)
 	jump_highlight.modulate = color
 
@@ -29,8 +28,12 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var cell := get_jump_cell_map_coords()
-	jump_highlight.visible = map.get_cell_source_id(cell) != -1
-	jump_highlight.global_position = map.to_global(map.map_to_local(cell))
+	var is_visible := map.get_cell_source_id(cell) != -1
+	jump_highlight.visible = is_visible
+	if is_visible:
+		jump_highlight.global_position = map.to_global(map.map_to_local(cell))
+		# Child of the rotating frog, but the tile it marks is axis-aligned.
+		jump_highlight.global_rotation = 0.0
 	
 	time_since_last_jump += delta;
 

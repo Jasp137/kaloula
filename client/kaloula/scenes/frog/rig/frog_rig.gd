@@ -1264,7 +1264,8 @@ func _fill(pts: PackedVector2Array, color: Color) -> void:
 		return
 	if Geometry2D.triangulate_polygon(pts).is_empty():
 		pts = Geometry2D.convex_hull(pts)
-		if pts.size() < 3:
+		# Slivers (e.g. an eyelid at the very start of a blink) fail even as a hull; they are sub-pixel, so skip them.
+		if pts.size() < 3 or Geometry2D.triangulate_polygon(pts).is_empty():
 			return
 	draw_colored_polygon(pts, color)
 
