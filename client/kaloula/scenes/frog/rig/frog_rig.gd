@@ -32,6 +32,9 @@ enum Anim { HOP, CRAWL, BELLY_UP, IDLE, TURN, STRETCH, CATCH }
 ## Length of one hop in rig units (150 = the original hop). Longer hops stretch the
 ## take-off-to-landing distance and arc; the frog's body keeps its size.
 @export_range(60.0, 400.0, 1.0) var hop_stride := HOP_STRIDE
+## Seconds a straight hop of two tiles (2 × HOP_STRIDE rig units) takes. Other hops scale
+## with their length: one tile takes half this, a one-tile diagonal about 0.71 of it.
+@export_range(0.1, 6.0, 0.01) var jump_duration := 2.0 * HOP_DURATION
 ## Seconds to blend the legs when switching between hop, crawl, idle and turn.
 @export_range(0.0, 0.5, 0.01) var blend_time := 0.15
 ## Keep the frog's body centred on the node (planted feet slide back like on a
@@ -56,7 +59,7 @@ enum Anim { HOP, CRAWL, BELLY_UP, IDLE, TURN, STRETCH, CATCH }
 			palette.changed.connect(queue_redraw)
 		queue_redraw()
 
-## Seconds into the current animation.
+## Seconds into the current animation, in animation time (HOP runs at its own rate; see hop_duration()).
 var time := 0.0
 ## How far the frog moved forward during the last frame (rig units).
 var travel_delta := 0.0
@@ -232,7 +235,8 @@ func _process(delta: float) -> void:
 			queue_redraw()
 		return
 	var step := delta * speed_scale
-	time += step
+	# HOP is authored to last HOP_DURATION; play it at the rate that makes it last hop_duration().
+	time += step * (HOP_DURATION / hop_duration() if animation == Anim.HOP else 1.0)
 	_blend_left = maxf(0.0, _blend_left - step)
 	if animation == Anim.IDLE and not feet_settled():
 		_update_steps(step)
@@ -266,7 +270,15 @@ func _finish_turn() -> void:
 	turn_finished.emit(degrees)
 
 
-## Length of one loop in seconds.
+## Seconds the current hop_stride takes (at speed_scale 1).
+func hop_duration() -> float:
+	var seconds := jump_duration * hop_stride / (2.0 * HOP_STRIDE)
+	assert(seconds > 0.0, "hop_duration must be positive (jump_duration %s, hop_stride %s)" % [jump_duration, hop_stride])
+	return seconds
+
+
+## Length of one loop in animation time (`time`). Equals real seconds for every animation
+## except HOP, which plays at its own rate; see hop_duration().
 func duration() -> float:
 	match animation:
 		Anim.HOP: return HOP_DURATION

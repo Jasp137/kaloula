@@ -10,7 +10,7 @@ in `game.tscn` the rig is scaled to 32/150 so a default hop covers one 32 px til
 | `IDLE` | 4.0 s | breathe & blink (sitting pose) |
 | `STRETCH` | 4.2 s | toe stretch, starts/ends sitting |
 | `CATCH` | 4.8 s | catches a mosquito with its tongue, starts/ends sitting |
-| `HOP` | 1.12 s | one hop forward, starts/ends sitting |
+| `HOP` | `hop_duration()` | one hop forward, starts/ends sitting; `jump_duration` (default 2.24 s) is a 2-tile straight hop, shorter or longer hops scale with `hop_stride` |
 | `CRAWL` | 1.6 s | slow four-beat crawl, 36 units per loop |
 | `BELLY_UP` | 3.2 s | on its back, struggling |
 | `TURN` | 0.92 s per 90° | turn in place by a fixed angle: `rig.turn(degrees, then)` |

@@ -10,6 +10,7 @@ class_name Frog
 @export var rotation_speed: float = 1;
 @export var map: Map;
 @export var jump_cooldown: float = 0.5;
+@export var jump_duration: float = 1;
 
 @onready var rig: FrogRig = $Rig;
 @onready var jump_highlight: Polygon2D = $JumpHighlight
@@ -29,13 +30,14 @@ enum Direction {
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	assert(map != null, "Frog needs its map export set")
+	jump_highlight.modulate = color
 	_apply_color()
+	rig.jump_duration = jump_duration
 	rig.cycle_finished.connect(_on_rig_cycle_finished)
 
 
 func _apply_color() -> void:
 	rig.palette = FrogPalette.from_color(color)
-	jump_highlight.modulate = color
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -65,13 +67,14 @@ func jump() -> bool:
 	if target_cell == map.local_to_map(map.to_local(global_position)):
 		return false
 	var to_target := map.to_global(map.map_to_local(target_cell)) - global_position
-	# The rig hops straight ahead, so face the cell centre exactly rather than the aimed point.
+	
 	global_rotation = Vector2.UP.angle_to(to_target)
 	rig.hop_stride = to_target.length() / rig.global_scale.y
 	rig.play_once(FrogRig.Anim.HOP)
 	_hop_start = global_position
 	_hop_cell = target_cell
 	_hopping = true
+	
 	_time_since_last_jump = 0
 	return true
 
