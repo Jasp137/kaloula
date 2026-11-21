@@ -33,6 +33,9 @@ var paint_left: int = 1:
 ## The frog's team colour (its starting `color`); used for its toes.
 var team_color: Color
 
+## False once the round is over (or the frog has lost): no more jumping or turning.
+var can_move := true
+
 var _time_since_last_jump = 0;
 var _hopping := false
 var _hop_start := Vector2.ZERO
@@ -82,7 +85,7 @@ func get_jump_cell_map_coords() -> Vector2i:
 	return map.local_to_map(map.to_local(target))
 
 func jump() -> bool:
-	if _hopping or _time_since_last_jump < jump_cooldown:
+	if not can_move or _hopping or _time_since_last_jump < jump_cooldown:
 		return false
 	var target_cell := get_jump_cell_map_coords()
 	if map.get_cell_source_id(target_cell) == -1:
@@ -114,8 +117,18 @@ func _on_rig_cycle_finished(animation: FrogRig.Anim) -> void:
 	jumped.emit(_hop_cell)
 
 
-func turn(direction: Direction, delta: float) -> void:
+## The frog lost: it lands any hop in progress, flips onto its back and
+## struggles there (the rig's BELLY_UP loop), and stops taking input.
+func lose() -> void:
+	can_move = false
 	if _hopping:
+		_hopping = false
+		global_position = map.to_global(map.map_to_local(_hop_cell))
+	rig.animation = FrogRig.Anim.BELLY_UP
+
+
+func turn(direction: Direction, delta: float) -> void:
+	if not can_move or _hopping:
 		return
 	var sign := -1.0 if direction == Direction.LEFT else 1.0
 	rotate(sign * rotation_speed * delta)
