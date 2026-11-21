@@ -8,7 +8,7 @@ class_name Frog
 @export var map: Map;
 @export var jump_highlight: Node2D
 
-@onready var sprite = $AnimatedSprite2D;
+@onready var rig: FrogRig = $Rig;
 
 enum Direction {
 	LEFT,
@@ -19,7 +19,7 @@ enum Direction {
 func _ready() -> void:
 	assert(map != null, "Frog needs its map export set")
 	assert(jump_highlight != null, "Frog needs its jump_highlight export set")
-	sprite.modulate = color
+	rig.palette = FrogPalette.from_color(color)
 	jump_highlight.modulate = color
 
 
@@ -40,3 +40,4 @@ func jump():
 func turn(direction: Direction, delta: float) -> void:
 	var sign := -1.0 if direction == Direction.LEFT else 1.0
 	rotate(sign * rotation_speed * delta)
+	rig.turn_by(sign * rotation_speed * delta)
