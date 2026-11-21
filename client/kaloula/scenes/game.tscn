@@ -17,10 +17,10 @@
 
 [node name="Game" type="Node2D" unique_id=787533974 node_paths=PackedStringArray("logic", "score", "hud")]
 script = ExtResource("5_game")
-music = ExtResource("14_music")
 logic = NodePath("Logic/Game")
 score = NodePath("Logic/Score")
 hud = NodePath("HUD")
+music = ExtResource("14_music")
 
 [node name="World" type="Node2D" parent="." unique_id=413104128]
 
