@@ -19,6 +19,9 @@ hud.update_frog(player_id, frog, paint_left)        # paint_left: -1 = leave as 
 # tiles currently in each player's colour; total = paintable tiles (pools excluded)
 hud.update_points([[0, 19], [1, 8]], total_tiles)
 
+# points shown on each player's card (the bar keeps showing tiles)
+hud.update_scores({0: 27, 1: 8})
+
 hud.set_timer(seconds_left)                         # red + pulse in the last 10 s, "TIME!" at 0
 hud.set_player_name(player_id, "Lily")              # optional, default "Player 1", "Player 2"
 ```
@@ -39,7 +42,7 @@ hud.set_player_name(player_id, "Lily")              # optional, default "Player 
 | `hud.gd`, `hud.tscn` | the HUD and its API |
 | `tug_bar.gd` | the bar (`TugBar`) |
 | `paint_can.gd` | a can with its paint level and mini frog (`PaintCan`) |
-| `player_card.gd` | can + name + tiles + paint left (`PlayerCard`) |
+| `player_card.gd` | can + name + points + paint left (`PlayerCard`) |
 | `pixel_style_box.gd` | the chunky pixel panel style (`PixelStyleBox`) |
 
 Font: Pixelify Sans (`assets/fonts/`, SIL Open Font License, see `PixelifySans-OFL.txt`).

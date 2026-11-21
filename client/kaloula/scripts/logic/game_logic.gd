@@ -24,6 +24,8 @@ var _paint_budgets: Dictionary[int, int] = {}
 var _pool_cells: Dictionary[Vector2i, PaintPool] = {}
 var _player_colors: Dictionary[int, Color] = {}
 
+signal cell_painted(cell: Vector2i, player_id: int)
+signal paint_changed(player_id: int, amount: int)
 
 func _ready() -> void:
 	time_left = round_seconds
@@ -62,11 +64,12 @@ func _on_frog_jumped(cell: Vector2i, player_id: int) -> void:
 			_set_paint(other_id, 10_000)
 	var pool: PaintPool = _pool_cells.get(cell)
 	if pool != null:
-		_set_paint(player_id, paint_budget)
 		frogs[player_id].color = pool.color
+		_set_paint(player_id, paint_budget)
 		return
 	if _paint_budgets[player_id] > 0 and map.paint_cell(cell, frogs[player_id].color):
 		_set_paint(player_id, _paint_budgets[player_id] - 1)
+		cell_painted.emit(cell, player_id)
 
 
 ## Every paint budget change goes through here so the frog knows how much paint
@@ -74,6 +77,7 @@ func _on_frog_jumped(cell: Vector2i, player_id: int) -> void:
 func _set_paint(player_id: int, amount: int) -> void:
 	_paint_budgets[player_id] = amount
 	frogs[player_id].paint_left = amount
+	paint_changed.emit(player_id, amount)
 
 
 func get_paint_left(player_id: int) -> int:
@@ -114,6 +118,14 @@ func _end_round() -> void:
 	for player_id in losers:
 		frogs[player_id].lose()
 	round_over.emit(winners, losers)
+
+
+func get_starting_colors() -> Dictionary[int, Color]:
+	return _player_colors.duplicate()
+
+
+func get_pool_cells() -> Array[Vector2i]:
+	return Array(_pool_cells.keys(), TYPE_VECTOR2I, &"", null)
 
 
 func get_players_on(cell: Vector2i) -> Array[int]:

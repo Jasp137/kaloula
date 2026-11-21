@@ -11,7 +11,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-
 func paint_cell(cell: Vector2i, color: Color) -> bool:
 	assert(get_cell_source_id(cell) != -1, "cannot paint empty cell %s" % cell)
 	var will_change: bool = _paint.get(cell) != color
@@ -28,7 +27,7 @@ func count_cells_with_color(color: Color) -> int:
 	return n
 
 func get_cell_color(cell: Vector2i) -> Color:
-	return _paint.get(cell)
+	return _paint.get(cell, Color.TRANSPARENT)
 
 func _use_tile_data_runtime_update(coords: Vector2i) -> bool:
 	return coords in _paint

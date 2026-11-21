@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dnpsdt4m3b7ux"]
+
+[ext_resource type="Script" uid="uid://bndblidcncytp" path="res://scenes/shape_outline/shape_outline.gd" id="1_jsb6f"]
+
+[node name="ShapeOutline" type="Node2D" unique_id=582275721]
+script = ExtResource("1_jsb6f")

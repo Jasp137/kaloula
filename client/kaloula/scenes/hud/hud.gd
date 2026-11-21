@@ -35,6 +35,7 @@ var _cards: Dictionary[int, PlayerCard] = {}
 var _colors: Dictionary[int, Color] = {}
 var _names: Dictionary[int, String] = {}
 var _tiles: Dictionary[int, int] = {}
+var _scores: Dictionary[int, int] = {}
 var _total_tiles := 0
 var _pulse: Tween
 
@@ -77,8 +78,16 @@ func update_points(points: Array, total_tiles: int = -1) -> void:
 		var player_id: int = entry[0]
 		_ensure_player(player_id)
 		_tiles[player_id] = int(entry[1])
-		_cards[player_id].set_score(_tiles[player_id])
 	_refresh_bar()
+
+
+## Score shown on each player's card: `scores` = {player_id: points}. The bar shows tiles
+## (update_points), the cards show this.
+func update_scores(scores: Dictionary) -> void:
+	for player_id in scores:
+		_ensure_player(player_id)
+		_scores[player_id] = int(scores[player_id])
+		_cards[player_id].set_score(_scores[player_id])
 
 
 ## Register or refresh a player's card. `frog`: the player's Frog (or a FrogRig):
@@ -148,7 +157,7 @@ func _rebuild_dock() -> void:
 			_dock_row.add_child(gap)
 		_dock_row.add_child(card)
 		card.set_player(_names[player_id], _colors.get(player_id, TEXT))
-		card.set_score(_tiles.get(player_id, 0))
+		card.set_score(_scores.get(player_id, 0))
 		_cards[player_id] = card
 
 

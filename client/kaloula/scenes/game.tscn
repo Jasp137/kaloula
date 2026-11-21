@@ -5,14 +5,17 @@
 [ext_resource type="PackedScene" uid="uid://bluji3k4u1kb0" path="res://scenes/frog/frog.tscn" id="3_lbhrr"]
 [ext_resource type="Script" uid="uid://b24q8jt3bfgef" path="res://scenes/frog/local_input.gd" id="4_linput"]
 [ext_resource type="Script" uid="uid://b2ie2t8efmnwv" path="res://scripts/game.gd" id="5_game"]
-[ext_resource type="PackedScene" uid="uid://b4gfjuv5yry5c" path="res://scenes/paint_pool/paint_pool.tscn" id="6_pool"]
+[ext_resource type="PackedScene" path="res://scenes/paint_pool/paint_pool.tscn" id="6_pool"]
 [ext_resource type="Script" uid="uid://gkm22lit6pwp" path="res://scripts/logic/game_logic.gd" id="7_logic"]
 [ext_resource type="Script" uid="uid://i8mmchgs3g8x" path="res://scripts/logic/score.gd" id="8_gee14"]
+[ext_resource type="PackedScene" uid="uid://dnpsdt4m3b7ux" path="res://scenes/shape_outline/shape_outline.tscn" id="9_outline"]
+[ext_resource type="PackedScene" path="res://scenes/hud/hud.tscn" id="10_hud"]
 
-[node name="Game" type="Node2D" unique_id=787533974 node_paths=PackedStringArray("logic", "score")]
+[node name="Game" type="Node2D" unique_id=787533974 node_paths=PackedStringArray("logic", "score", "hud")]
 script = ExtResource("5_game")
 logic = NodePath("Logic/Game")
 score = NodePath("Logic/Score")
+hud = NodePath("HUD")
 
 [node name="World" type="Node2D" parent="." unique_id=413104128]
 
@@ -63,5 +66,9 @@ pool_cells = Dictionary[int, Vector2i]({
 })
 pool_scene = ExtResource("6_pool")
 
-[node name="Score" type="Node" parent="Logic" unique_id=1452523307]
+[node name="Score" type="Node" parent="Logic" unique_id=1452523307 node_paths=PackedStringArray("map")]
 script = ExtResource("8_gee14")
+map = NodePath("../../World/TileMapLayer")
+outline_scene = ExtResource("9_outline")
+
+[node name="HUD" parent="." unique_id=1720485396 instance=ExtResource("10_hud")]

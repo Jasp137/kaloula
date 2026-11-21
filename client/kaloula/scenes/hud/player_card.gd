@@ -49,8 +49,8 @@ func set_player(display_name: String, color: Color) -> void:
 	name_label.add_theme_color_override("font_color", color.lerp(Color.WHITE, 0.55))
 
 
-func set_score(tiles: int) -> void:
-	score_label.text = str(tiles)
+func set_score(points: int) -> void:
+	score_label.text = str(points)
 	_refresh_paint_label()
 
 
@@ -63,11 +63,11 @@ func set_paint(left: int, max_paint: int) -> void:
 
 func _refresh_paint_label() -> void:
 	if _paint_left < 0:
-		paint_label.text = "tiles"
+		paint_label.text = "points"
 	elif _paint_left > _paint_max:
-		paint_label.text = "tiles · lots of paint"
+		paint_label.text = "points · lots of paint"
 	else:
-		paint_label.text = "tiles · %d of %d paint" % [_paint_left, _paint_max]
+		paint_label.text = "points · %d of %d paint" % [_paint_left, _paint_max]
 
 
 static func _label(font: Font, font_size: int, align: HorizontalAlignment) -> Label:
