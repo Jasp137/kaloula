@@ -1,0 +1,22 @@
+[gd_scene format=4 uid="uid://bmm0yn086uric"]
+
+[ext_resource type="Script" uid="uid://q7oxsk8lfglb" path="res://scripts/map.gd" id="1_uwrxv"]
+[ext_resource type="TileSet" uid="uid://d4awnes6y6hjs" path="res://assets/tiles.tres" id="2_tiles"]
+[ext_resource type="Script" uid="uid://bn5irdyh830sa" path="res://scenes/frog/frog.gd" id="3_lbhrr"]
+[ext_resource type="SpriteFrames" uid="uid://qn47pacft6oc" path="res://assets/frog_sprites.tres" id="3_lnu2h"]
+
+[node name="Game" type="Node2D" unique_id=787533974]
+
+[node name="World" type="Node2D" parent="." unique_id=413104128]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="World" unique_id=1786020130]
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAACAAEAAAAAAAAAAAD/////AAAAAAAAAAAAAP//AAAAAAAAAAABAP//AAAAAAAAAAACAP//AAAAAAAAAAADAP//AAAAAAAAAAADAAAAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAA=")
+tile_set = ExtResource("2_tiles")
+script = ExtResource("1_uwrxv")
+
+[node name="Frog" type="Node2D" parent="World" unique_id=70407214]
+position = Vector2(-16, 16)
+script = ExtResource("3_lbhrr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="World/Frog" unique_id=2027099068]
+sprite_frames = ExtResource("3_lnu2h")
