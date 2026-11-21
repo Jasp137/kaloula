@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b4gfjuv5yry5c"]
+
+[ext_resource type="Script" uid="uid://wppojfbl037u" path="res://scenes/paint_pool/paint_pool.gd" id="1_wucq4"]
+
+[node name="PaintPool" type="Node2D" unique_id=1872933310]
+script = ExtResource("1_wucq4")

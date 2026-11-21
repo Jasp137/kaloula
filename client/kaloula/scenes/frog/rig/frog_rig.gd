@@ -21,7 +21,7 @@ enum Anim { HOP, CRAWL, BELLY_UP, IDLE, TURN, STRETCH, CATCH }
 		var from: Dictionary = _forced_from if _forced_from != null else (_display_pose() if is_inside_tree() else {})
 		animation = v
 		_turn_once = false
-		_fidgeting = false
+		_once_then = null
 		_restart(from)
 ## Used by the TURN animation: 90 = quarter turn right, -90 = left, 180 = turn around.
 ## In a game call turn(degrees) instead; that also rotates the node when it's done.
@@ -78,7 +78,8 @@ var _step_to := PackedFloat64Array([0.0, 0.0, 0.0, 0.0])
 var _step_t := PackedFloat64Array([-1.0, -1.0, -1.0, -1.0])
 var _turn_dir := 0.0
 var _since_turn := 10.0
-var _fidgeting := false
+# Animation to switch to when the current loop ends (set by play_once()), or null to keep looping.
+var _once_then = null
 var _still := 0.0
 var _next_fidget := -1.0
 
@@ -104,6 +105,17 @@ func turn(degrees: float, then: Anim = Anim.IDLE) -> void:
 		_restart(from)
 	_turn_once = true
 	_turn_then = then if then != Anim.TURN else Anim.IDLE
+
+
+## Play one loop of `anim`, then switch to `then`. HOP, STRETCH and CATCH start and end
+## sitting, so they suit this best. Use turn() for TURN.
+func play_once(anim: Anim, then: Anim = Anim.IDLE) -> void:
+	assert(anim != Anim.TURN, "use turn() to play TURN")
+	if animation == anim:
+		_restart(_display_pose() if is_inside_tree() else {})
+	else:
+		animation = anim
+	_once_then = then
 
 
 ## True while a turn started with turn() is playing.
@@ -183,8 +195,7 @@ func _update_fidget(delta: float) -> void:
 		_next_fidget = randf_range(fidget_after.x, fidget_after.y)
 	_still += delta
 	if _still >= _next_fidget:
-		animation = [Anim.STRETCH, Anim.CATCH].pick_random()
-		_fidgeting = true
+		play_once([Anim.STRETCH, Anim.CATCH].pick_random())
 		_next_fidget = -1.0
 
 
@@ -233,8 +244,8 @@ func _process(delta: float) -> void:
 	if cycle != _last_cycle:
 		_last_cycle = cycle
 		var finished := animation
-		if _fidgeting and (finished == Anim.STRETCH or finished == Anim.CATCH):
-			animation = Anim.IDLE  # fidgets play once (the setter clears _fidgeting)
+		if _once_then != null:
+			animation = _once_then  # the setter clears _once_then
 		cycle_finished.emit(finished)
 	var travel := get_travel()
 	travel_delta = travel - _last_travel
