@@ -19,6 +19,14 @@ func paint_cell(cell: Vector2i, color: Color) -> bool:
 	notify_runtime_tile_data_update()
 	return will_change
 
+## Number of tiles currently painted `color`.
+func count_cells_with_color(color: Color) -> int:
+	var n := 0
+	for c in _paint.values():
+		if c.is_equal_approx(color):
+			n += 1
+	return n
+
 func get_cell_color(cell: Vector2i) -> Color:
 	return _paint.get(cell)
 
