@@ -28,7 +28,6 @@ var _vs_button: Button
 var _settings_back: Button
 var _toast: PanelContainer
 var _toast_tween: Tween
-var _music_player: AudioStreamPlayer
 var _sfx_player: AudioStreamPlayer
 var _sound_value: Label
 var _music_value: Label
@@ -41,13 +40,7 @@ func _ready() -> void:
 	_build_main()
 	_build_settings()
 	_build_toast()
-	_music_player = AudioStreamPlayer.new()
-	_music_player.bus = GameSettings.MUSIC_BUS
-	if music is AudioStreamMP3:
-		music.loop = true
-	_music_player.stream = music
-	add_child(_music_player)
-	_music_player.play()
+	Music.play(music)
 	_sfx_player = AudioStreamPlayer.new()
 	_sfx_player.bus = GameSettings.SFX_BUS
 	_sfx_player.stream = sound_preview

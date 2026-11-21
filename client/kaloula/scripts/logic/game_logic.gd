@@ -5,6 +5,9 @@ extends Node
 ## Emitted when the time runs out. `winners`: the player ids with the most tiles in
 ## their team colour; `losers`: everyone else (empty on a tie).
 signal round_over(winners: Array[int], losers: Array[int])
+## Emitted whenever the whole seconds left in the round change, ending with 0.
+signal ticked(seconds_left: int)
+signal stomped(victim_id: int, by_id: int)
 
 @export var map: Map
 @export var frogs: Dictionary[int, Frog] = {}
@@ -12,13 +15,16 @@ signal round_over(winners: Array[int], losers: Array[int])
 ## Each player's paint pool cell; the pool takes that frog's starting colour.
 @export var pool_cells: Dictionary[int, Vector2i] = {}
 @export var pool_scene: PackedScene
-## Length of a round in seconds; at 0 the round ends and the losers flip onto
-## their backs. 0 or less = no time limit.
-@export var round_seconds: float = 90.0
+## One-shot Timer for the round; its wait_time is the round length. When it runs out the
+## losers flip onto their backs. Leave unset for no time limit.
+@export var round_timer: Timer
 
-## Seconds left in the round.
-var time_left: float = 0.0
+## Seconds left in the round (0 without a time limit).
+var time_left: float:
+	get:
+		return round_timer.time_left if round_timer != null else 0.0
 var _round_over := false
+var _last_tick := -1
 
 var _paint_budgets: Dictionary[int, int] = {}
 var _pool_cells: Dictionary[Vector2i, PaintPool] = {}
@@ -28,7 +34,6 @@ signal cell_painted(cell: Vector2i, player_id: int)
 signal paint_changed(player_id: int, amount: int)
 
 func _ready() -> void:
-	time_left = round_seconds
 	assert(map != null, "GameLogic needs its map export set")
 	assert(not frogs.is_empty(), "GameLogic needs at least one frog in its frogs export")
 	assert(pool_scene != null, "GameLogic needs its pool_scene export set")
@@ -40,6 +45,10 @@ func _ready() -> void:
 		frog.jumped.connect(_on_frog_jumped.bind(player_id))
 		_place_pool(player_id, pool_cells[player_id], frog.color)
 		_player_colors[player_id] = frog.color
+	if round_timer != null:
+		assert(round_timer.one_shot, "GameLogic's round_timer must be one-shot")
+		round_timer.timeout.connect(_end_round)
+		round_timer.start()
 
 
 func _place_pool(player_id: int, cell: Vector2i, color: Color) -> void:
@@ -62,6 +71,7 @@ func _on_frog_jumped(cell: Vector2i, player_id: int) -> void:
 		if other_id != player_id:
 			frogs[other_id].color = frogs[player_id].color
 			_set_paint(other_id, 10_000)
+			stomped.emit(other_id, player_id)
 	var pool: PaintPool = _pool_cells.get(cell)
 	if pool != null:
 		frogs[player_id].color = pool.color
@@ -84,12 +94,13 @@ func get_paint_left(player_id: int) -> int:
 	return _paint_budgets.get(player_id, 0)
 
 
-func _process(delta: float) -> void:
-	if round_seconds <= 0.0 or _round_over:
+func _process(_delta: float) -> void:
+	if round_timer == null or _round_over:
 		return
-	time_left = maxf(0.0, time_left - delta)
-	if time_left == 0.0:
-		_end_round()
+	var seconds := ceili(round_timer.time_left)
+	if seconds != _last_tick:
+		_last_tick = seconds
+		ticked.emit(seconds)
 
 
 ## Tiles currently in the player's team colour.
@@ -103,6 +114,7 @@ func is_round_over() -> bool:
 
 func _end_round() -> void:
 	_round_over = true
+	ticked.emit(0)
 	var best := -1
 	for player_id in frogs:
 		best = maxi(best, get_tiles(player_id))

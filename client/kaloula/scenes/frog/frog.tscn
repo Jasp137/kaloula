@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bn5irdyh830sa" path="res://scenes/frog/frog.gd" id="1_qi8j7"]
 [ext_resource type="Script" uid="uid://16rr2fowfwxe" path="res://scenes/frog/rig/frog_rig.gd" id="2_qsc3k"]
 [ext_resource type="Script" uid="uid://dywlmlhfcsrkf" path="res://scenes/frog/rig/frog_palette.gd" id="3_iplly"]
+[ext_resource type="AudioStream" uid="uid://nbrgqwvrevx5" path="res://assets/audio/frog_hop.mp3" id="4_hop"]
 
 [sub_resource type="Resource" id="Resource_u5sy4"]
 script = ExtResource("3_iplly")
@@ -23,3 +24,10 @@ palette = SubResource("Resource_u5sy4")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1198479039]
 polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[node name="HopSound" type="AudioStreamPlayer2D" parent="." unique_id=1316601277]
+stream = ExtResource("4_hop")
+attenuation = 0.0
+max_distance = 100000.0
+max_polyphony = 2
+bus = &"SFX"

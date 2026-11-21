@@ -22,6 +22,7 @@ class_name Frog
 
 @onready var rig: FrogRig = $Rig;
 @onready var jump_highlight: Polygon2D = $JumpHighlight
+@onready var hop_sound: AudioStreamPlayer2D = $HopSound
 
 ## Paint the frog has left (the game logic keeps this up to date). At 0 the
 ## frog's body turns back to `base_color`.
@@ -97,6 +98,7 @@ func jump() -> bool:
 	global_rotation = Vector2.UP.angle_to(to_target)
 	rig.hop_stride = to_target.length() / rig.global_scale.y
 	rig.play_once(FrogRig.Anim.HOP)
+	hop_sound.play()
 	_hop_start = global_position
 	_hop_cell = target_cell
 	_hopping = true

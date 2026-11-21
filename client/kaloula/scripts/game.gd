@@ -4,6 +4,7 @@ extends Node2D
 @export var logic: GameLogic
 @export var score: Score
 @export var hud: HUD
+@export var music: AudioStream
 
 func _ready() -> void:
 	assert(logic != null, "Game needs its logic export set")
@@ -13,16 +14,14 @@ func _ready() -> void:
 	# After score.on_cell_painted (connected first), so shape completions are already counted.
 	logic.cell_painted.connect(func(_cell, _player_id): _update_hud_scores())
 	logic.paint_changed.connect(func(player_id, amount): hud.update_frog(player_id, logic.frogs[player_id], amount))
+	logic.ticked.connect(hud.set_timer)
 	score.start(logic.get_starting_colors(), logic.get_pool_cells())
 	score.shape_completed.connect(_on_shape_completed)
 	for player_id in logic.frogs:
 		hud.update_frog(player_id, logic.frogs[player_id], logic.get_paint_left(player_id))
 	_update_hud_scores()
-
-
-func _process(_delta: float) -> void:
-	if logic.round_seconds > 0.0:
-		hud.set_timer(ceili(logic.time_left))
+	if music != null:
+		Music.play(music)
 
 
 func _update_hud_scores() -> void:

@@ -10,9 +10,14 @@
 [ext_resource type="Script" uid="uid://i8mmchgs3g8x" path="res://scripts/logic/score.gd" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://dnpsdt4m3b7ux" path="res://scenes/shape_outline/shape_outline.tscn" id="9_outline"]
 [ext_resource type="PackedScene" path="res://scenes/hud/hud.tscn" id="10_hud"]
+[ext_resource type="Script" uid="uid://b2va03a6lqkjd" path="res://scripts/game_audio.gd" id="11_audio"]
+[ext_resource type="AudioStream" uid="uid://cuea3nqok6uc4" path="res://assets/audio/frog_paints.mp3" id="12_paint"]
+[ext_resource type="AudioStream" uid="uid://05emixnaf2r0" path="res://assets/audio/frog_gets_painted_by_other_frog.mp3" id="13_stomp"]
+[ext_resource type="AudioStream" uid="uid://bcvq0xthmwf8f" path="res://assets/audio/bossa_antigua.mp3" id="14_music"]
 
 [node name="Game" type="Node2D" unique_id=787533974 node_paths=PackedStringArray("logic", "score", "hud")]
 script = ExtResource("5_game")
+music = ExtResource("14_music")
 logic = NodePath("Logic/Game")
 score = NodePath("Logic/Score")
 hud = NodePath("HUD")
@@ -53,7 +58,7 @@ action_prefix = "p2_"
 
 [node name="Logic" type="Node" parent="." unique_id=1590238117]
 
-[node name="Game" type="Node" parent="Logic" unique_id=402817736 node_paths=PackedStringArray("map", "frogs")]
+[node name="Game" type="Node" parent="Logic" unique_id=402817736 node_paths=PackedStringArray("map", "frogs", "round_timer")]
 script = ExtResource("7_logic")
 map = NodePath("../../World/TileMapLayer")
 frogs = {
@@ -65,6 +70,11 @@ pool_cells = Dictionary[int, Vector2i]({
 1: Vector2i(8, 1)
 })
 pool_scene = ExtResource("6_pool")
+round_timer = NodePath("RoundTimer")
+
+[node name="RoundTimer" type="Timer" parent="Logic/Game" unique_id=2066483119]
+wait_time = 90.0
+one_shot = true
 
 [node name="Score" type="Node" parent="Logic" unique_id=1452523307 node_paths=PackedStringArray("map")]
 script = ExtResource("8_gee14")
@@ -72,3 +82,9 @@ map = NodePath("../../World/TileMapLayer")
 outline_scene = ExtResource("9_outline")
 
 [node name="HUD" parent="." unique_id=1720485396 instance=ExtResource("10_hud")]
+
+[node name="Audio" type="Node" parent="." unique_id=938155102 node_paths=PackedStringArray("logic")]
+script = ExtResource("11_audio")
+logic = NodePath("../Logic/Game")
+paint_sound = ExtResource("12_paint")
+stomped_sound = ExtResource("13_stomp")
