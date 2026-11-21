@@ -4,8 +4,19 @@
 [ext_resource type="TileSet" uid="uid://d4awnes6y6hjs" path="res://assets/tiles.tres" id="2_tiles"]
 [ext_resource type="PackedScene" uid="uid://bluji3k4u1kb0" path="res://scenes/frog/frog.tscn" id="3_lbhrr"]
 [ext_resource type="Script" uid="uid://b24q8jt3bfgef" path="res://scenes/frog/local_input.gd" id="4_linput"]
+[ext_resource type="Script" uid="uid://b2ie2t8efmnwv" path="res://scripts/game.gd" id="5_game"]
+[ext_resource type="Script" uid="uid://wppojfbl037u" path="res://scenes/paint_pool/paint_pool.gd" id="6_pool"]
 
-[node name="Game" type="Node2D" unique_id=787533974]
+[node name="Game" type="Node2D" unique_id=787533974 node_paths=PackedStringArray("frogs", "pools")]
+script = ExtResource("5_game")
+frogs = {
+0: NodePath("World/Frog"),
+1: NodePath("World/Frog2")
+}
+pools = {
+0: NodePath("World/PaintPool"),
+1: NodePath("World/PaintPool2")
+}
 
 [node name="World" type="Node2D" parent="." unique_id=413104128]
 
@@ -14,15 +25,29 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAA
 tile_set = ExtResource("2_tiles")
 script = ExtResource("1_uwrxv")
 
+[node name="PaintPool" type="Node2D" parent="World" unique_id=1904417321]
+position = Vector2(-16, 16)
+script = ExtResource("6_pool")
+
+[node name="PaintPool2" type="Node2D" parent="World" unique_id=812650993]
+position = Vector2(272, 48)
+script = ExtResource("6_pool")
+
 [node name="Frog" parent="World" unique_id=264248472 node_paths=PackedStringArray("map") instance=ExtResource("3_lbhrr")]
 position = Vector2(-16, 16)
+jump_distance = null
+color = null
+rotation_speed = null
 map = NodePath("../TileMapLayer")
+jump_cooldown = null
 
 [node name="Frog2" parent="World" unique_id=673154137 node_paths=PackedStringArray("map") instance=ExtResource("3_lbhrr")]
 position = Vector2(272, 48)
+jump_distance = null
 color = Color(0.38051757, 0.6086238, 0.19310415, 1)
-player_id = "Player 2"
+rotation_speed = null
 map = NodePath("../TileMapLayer")
+jump_cooldown = null
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2080512935]
 position = Vector2(120, 64)

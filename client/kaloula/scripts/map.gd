@@ -13,11 +13,15 @@ func _process(delta: float) -> void:
 	pass
 
 
-func paint_cell(cell: Vector2i, color: Color) -> void:
+func paint_cell(cell: Vector2i, color: Color) -> bool:
 	assert(get_cell_source_id(cell) != -1, "cannot paint empty cell %s" % cell)
+	var will_change: bool = _paint.get(cell) != color
 	_paint[cell] = color
 	notify_runtime_tile_data_update()
+	return will_change
 
+func get_cell_color(cell: Vector2i) -> Color:
+	return _paint.get(cell)
 
 func _use_tile_data_runtime_update(coords: Vector2i) -> bool:
 	return coords in _paint

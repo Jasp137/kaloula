@@ -2,8 +2,11 @@ extends CharacterBody2D
 class_name Frog
 
 @export var jump_distance: float = 40;
-@export var color: Color = Color.BLUE
-@export var player_id: String = "Player 1"
+@export var color: Color = Color.BLUE:
+	set(value):
+		color = value
+		if is_node_ready():
+			_apply_color()
 @export var rotation_speed: float = 1;
 @export var map: Map;
 @export var jump_cooldown: float = 0.5;
@@ -13,6 +16,8 @@ class_name Frog
 
 var time_since_last_jump = 0;
 
+signal jumped(cell: Vector2i)
+
 enum Direction {
 	LEFT,
 	RIGHT
@@ -21,6 +26,10 @@ enum Direction {
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	assert(map != null, "Frog needs its map export set")
+	_apply_color()
+
+
+func _apply_color() -> void:
 	rig.palette = FrogPalette.from_color(color)
 	jump_highlight.modulate = color
 
@@ -53,7 +62,7 @@ func jump() -> bool:
 	var target_coords := map.to_global(map.map_to_local(target_cell))
 		
 	global_position = target_coords;
-	map.paint_cell(target_cell, color)
+	jumped.emit(target_cell)
 	
 	time_since_last_jump = 0
 	
