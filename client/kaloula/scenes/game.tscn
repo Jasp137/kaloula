@@ -43,7 +43,8 @@ jump_duration = 0.5
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2080512935]
 position = Vector2(120, 64)
-zoom = Vector2(3, 3)
+offset = Vector2(0, 12)
+zoom = Vector2(2.1, 2.1)
 
 [node name="Controllers" type="Node" parent="." unique_id=1309785512]
 
